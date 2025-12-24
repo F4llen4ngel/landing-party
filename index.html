@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LMAO-PARTY-1337</title>
+  <meta name="description" content="Ivan invites you — 28 Dec, 18:00 — Шашлыкoff, Кузнецкий Мост, 19, стр. 1" />
+  <style>
+    :root{
+      --bg: #07070a;
+      --fg: #f4f4f6;
+      --muted: rgba(244,244,246,.68);
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.10);
+      --stroke: rgba(255,255,255,.14);
+      --shadow: 0 24px 80px rgba(0,0,0,.55);
+      --gold: #d7b35a;
+      --gold2:#ffd98a;
+      --accent: var(--gold);
+      --btnText: #0b0b0f;
+      --radius: 28px;
+      --maxw: 980px;
+      --glass: blur(14px);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--fg);
+      overflow-x:hidden;
+    }
+
+    /* Background: 3D-ish orbs + subtle grain */
+    .bg{
+      position:fixed; inset:0;
+      pointer-events:none;
+      z-index:-1;
+      overflow:hidden;
+    }
+    .orb{
+      position:absolute;
+      width: 520px; height: 520px;
+      border-radius: 999px;
+      filter: blur(0px);
+      opacity:.9;
+      transform: translate3d(0,0,0);
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.55), rgba(255,255,255,0) 42%),
+        radial-gradient(circle at 70% 75%, rgba(255,217,138,.38), rgba(255,217,138,0) 55%),
+        radial-gradient(circle at 20% 90%, rgba(215,179,90,.28), rgba(215,179,90,0) 60%),
+        radial-gradient(circle at 60% 40%, rgba(255,255,255,.18), rgba(255,255,255,0) 55%),
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.10), rgba(255,255,255,0) 70%);
+      box-shadow: inset 0 0 60px rgba(255,255,255,.12);
+    }
+    .orb.one{left:-160px; top:-200px; width:560px; height:560px;}
+    .orb.two{right:-220px; top:110px; width:620px; height:620px;}
+    .orb.three{left:10vw; bottom:-260px; width:680px; height:680px; opacity:.7;}
+    .glowline{
+      position:absolute;
+      left:-20vw; right:-20vw; top:45vh;
+      height:1px;
+      background: linear-gradient(90deg, rgba(255,255,255,0), rgba(215,179,90,.45), rgba(255,255,255,0));
+      opacity:.55;
+      filter: blur(.2px);
+    }
+    .grain{
+      position:absolute; inset:-40%;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.23'/%3E%3C/svg%3E");
+      opacity:.18;
+      mix-blend-mode: overlay;
+      transform: rotate(8deg);
+    }
+    /* Layout */
+    .wrap{
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 18px;
+    }
+    .slide{
+      width: min(var(--maxw), 100%);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, var(--card2), var(--card));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      backdrop-filter: var(--glass);
+      -webkit-backdrop-filter: var(--glass);
+      padding: clamp(18px, 3.2vw, 34px);
+      position:relative;
+      overflow:hidden;
+    }
+
+    /* subtle inner highlight */
+    .slide:before{
+      content:"";
+      position:absolute; inset:-2px;
+      border-radius: calc(var(--radius) + 2px);
+      background: radial-gradient(600px 220px at 20% 0%, rgba(255,217,138,.22), rgba(255,217,138,0) 60%),
+                  radial-gradient(520px 260px at 100% 20%, rgba(215,179,90,.16), rgba(215,179,90,0) 62%);
+      pointer-events:none;
+    }
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      position:relative;
+      z-index:1;
+      margin-bottom: 14px;
+    }
+    .tag{
+      font-family: var(--mono);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: var(--muted);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      white-space:nowrap;
+    }
+    .tag b{
+      color: var(--fg);
+      font-weight:700;
+      letter-spacing:.12em;
+    }
+
+    h1{
+      margin: 10px 0 10px;
+      font-size: clamp(44px, 7.4vw, 86px);
+      line-height: .92;
+      letter-spacing: -0.04em;
+      position:relative;
+      z-index:1;
+      text-transform: uppercase;
+    }
+    h1 .line2{
+      display:block;
+      font-family: var(--mono);
+      letter-spacing: 0.02em;
+      font-size: 0.76em;
+      opacity:.98;
+    }
+
+    .sub{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px 12px;
+      align-items:center;
+      position:relative;
+      z-index:1;
+      margin: 10px 0 18px;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.06);
+      color: var(--fg);
+      font-family: var(--mono);
+      font-size: 12.5px;
+      letter-spacing:.06em;
+      text-transform: uppercase;
+      white-space:nowrap;
+    }
+    .chip i{
+      width:8px; height:8px;
+      border-radius:999px;
+      background: var(--accent);
+      box-shadow: 0 0 20px rgba(215,179,90,.6);
+      display:inline-block;
+    }
+    .details{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 10px;
+      position:relative;
+      z-index:1;
+    }
+
+    .address{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px 12px;
+      align-items:center;
+      justify-content:space-between;
+      padding: 14px 14px;
+      border-radius: 18px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.05);
+    }
+    .address .left{
+      min-width: 240px;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .address .left .place{
+      font-weight: 800;
+      letter-spacing:-.02em;
+      font-size: 16px;
+    }
+    .address .left .addr{
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12.5px;
+      letter-spacing:.04em;
+    }
+
+    .address .actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    a.small-link, button.small-link{
+      appearance:none;
+      cursor:pointer;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.06);
+      color: var(--fg);
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.06em;
+      text-transform: uppercase;
+      text-decoration:none;
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+    }
+    /* Main CTA */
+    .cta-main{
+      margin-top: 6px;
+      text-align:center;
+    }
+    .btn{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      width:100%;
+      padding: 18px 20px;
+      border-radius: 18px;
+      border: 1px solid var(--stroke);
+      text-decoration:none;
+      font-weight: 900;
+      letter-spacing: .02em;
+      text-transform: uppercase;
+      font-size: 15px;
+      font-family: var(--mono);
+    }
+    .btn.primary{
+      background: linear-gradient(180deg, var(--gold2), var(--accent));
+      color: var(--btnText);
+      border-color: rgba(0,0,0,0);
+      box-shadow: 0 16px 44px rgba(215,179,90,.22);
+    }
+    .cta-hint{
+      margin-top: 8px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing:.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* Gift card */
+    .gift-card{
+      margin-top: 14px;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.04);
+      display:flex;
+      flex-direction:column;
+      gap: 14px;
+    }
+    .gift-card .gift-text{
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .gift-card .gift-text strong{
+      display:block;
+      color: var(--fg);
+      font-family: var(--mono);
+      letter-spacing:.04em;
+      text-transform: uppercase;
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+    .btn.ghost{
+      background: rgba(255,255,255,.06);
+      color: var(--fg);
+      padding: 14px 16px;
+      font-size: 13px;
+    }
+
+    .mapbox{
+      margin-top: 14px;
+      border-radius: 18px;
+      overflow:hidden;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.04);
+      position:relative;
+    }
+    .mapbox .maphead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--stroke);
+      font-family: var(--mono);
+      text-transform: uppercase;
+      letter-spacing:.06em;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .mapbox .maphead b{ color: var(--fg); }
+    .mapbox iframe{
+      width:100%;
+      height: 260px;
+      border:0;
+      display:block;
+    }
+
+    .foot{
+      margin-top: 14px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11.5px;
+      letter-spacing:.05em;
+      text-transform: uppercase;
+      position:relative;
+      z-index:1;
+    }
+
+    /* mobile-first tightening */
+    @media(max-width:420px){
+      .address{ padding: 12px; }
+      .btn{ padding: 15px 14px; }
+      .mapbox iframe{ height: 230px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg" aria-hidden="true">
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <div class="orb three"></div>
+    <div class="glowline"></div>
+    <div class="grain"></div>
+  </div>
+
+  <div class="wrap">
+    <main class="slide">
+      <header>
+        <div class="tag">
+          <span>YOU’RE INVITED</span>
+        </div>
+      </header>
+
+      <h1>
+        LMAO-PARTY
+        <span class="line2">1337</span>
+      </h1>
+
+      <div class="sub">
+        <span class="chip"><i></i> 28 DEC • 18:00</span>
+        <span class="chip"><i></i> Шашлыкoff</span>
+        <span class="chip"><i></i> MOSCOW</span>
+      </div>
+
+      <div class="details">
+        <div class="address">
+          <div class="left">
+            <div class="place">Шашлыкoff</div>
+            <div class="addr" id="addrText">Кузнецкий Мост, 19, стр. 1</div>
+          </div>
+
+          <div class="actions">
+            <a class="small-link"
+               href="https://yandex.ru/maps/?text=%D0%A8%D0%B0%D1%88%D0%BB%D1%8B%D0%BAoff%2C%20%D0%9A%D1%83%D0%B7%D0%BD%D0%B5%D1%86%D0%BA%D0%B8%D0%B9%20%D0%9C%D0%BE%D1%81%D1%82%2C%2019%2C%20%D1%81%D1%82%D1%80.%201"
+               target="_blank" rel="noopener">
+              OPEN IN MAPS
+            </a>
+            <button class="small-link" type="button" id="copyAddr">COPY</button>
+          </div>
+        </div>
+
+        <div class="cta-main">
+          <a class="btn primary" href="https://t.me/f4llen4ngeI" target="_blank" rel="noopener">
+            LMAO
+          </a>
+        </div>
+
+        <div class="gift-card">
+          <div class="gift-text">
+            <strong>💰 Не знаешь, что подарить? деньги — лучший подарок</strong>
+          </div>
+          <a class="btn ghost" href="https://www.tbank.ru/cf/U7Oh1z1stH" target="_blank" rel="noopener">
+            MONEY TALKS
+          </a>
+        </div>
+
+        <div class="mapbox">
+          <div class="maphead">
+            <span><b>Yandex Map</b></span>
+          </div>
+          <div style="position:relative;overflow:hidden;"><a href="https://yandex.ru/maps/org/shashlykoff/64211044060/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:0px;">Шашлыкоff</a><a href="https://yandex.ru/maps/213/moscow/category/restaurant/184106394/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:14px;">Ресторан в Москве</a><iframe src="https://yandex.ru/map-widget/v1/?ll=37.625340%2C55.762093&mode=search&oid=64211044060&ol=biz&sll=37.625340%2C55.762093&text=%D0%A8%D0%B0%D1%88%D0%BB%D1%8B%D0%BAoff%2C%20%D0%9A%D1%83%D0%B7%D0%BD%D0%B5%D1%86%D0%BA%D0%B8%D0%B9%20%D0%9C%D0%BE%D1%81%D1%82%2C%2019%2C%20%D1%81%D1%82%D1%80.%201&z=15" width="560" height="400" frameborder="1" allowfullscreen="true" style="position:relative;"></iframe></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const copyBtn = document.getElementById('copyAddr');
+    const addrText = document.getElementById('addrText');
+
+    copyBtn.addEventListener('click', async () => {
+      const txt = addrText.textContent.trim();
+      try{
+        await navigator.clipboard.writeText(txt);
+        copyBtn.textContent = 'COPIED';
+        setTimeout(() => copyBtn.textContent = 'COPY', 900);
+      } catch(e){
+        // fallback
+        const ta = document.createElement('textarea');
+        ta.value = txt;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        copyBtn.textContent = 'COPIED';
+        setTimeout(() => copyBtn.textContent = 'COPY', 900);
+      }
+    });
+  </script>
+</body>
+</html>
